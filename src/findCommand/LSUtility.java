@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class LSCommand {
+public class LSUtility {
 	
 	private File workDir;
 
-	public LSCommand(File workDir) {
+	public LSUtility(File workDir) {
 		this.workDir = workDir;
 	}
 	
