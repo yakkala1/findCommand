@@ -10,7 +10,6 @@ public class LSCommand extends Command {
 	private static final Set<String> validArgumentNames;
 	static {
 		validArgumentNames = new HashSet<String>();
-		validArgumentNames.add("name");
 	}
 
 	public LSCommand(File workDir, Map<String, String> args) {
@@ -31,6 +30,10 @@ public class LSCommand extends Command {
 	@Override
 	public String execute() {
 		String[] fileNames = workDir.list();
+		return formatOutput(fileNames);
+	}
+
+	private String formatOutput(String[] fileNames) {
 		String result = "";
 		for(String fileName : fileNames) {
 			result += fileName+"\n";

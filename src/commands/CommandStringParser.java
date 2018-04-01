@@ -15,6 +15,7 @@ public class CommandStringParser {
 	public Command parse(String commandLine) {
 		String[] commandWords = commandLine.split("\\s");
 		String commandName = getCommandName(commandWords);
+		Logger.debug("commandName : "+commandName);
 		Map<String,String> args = getArgsMap(commandWords);
 		Logger.debug("args : "+args);
 		return CommandFactory.createCommand(workDir, commandName, args);

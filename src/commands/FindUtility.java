@@ -7,24 +7,33 @@ import java.util.List;
 public class FindUtility {
 	
 	File workDir;
-	String name;
+	List<FileFilter> filters;
 	
-	public FindUtility(File workDir, String name) {
+	public FindUtility(File workDir, List<FileFilter> filters) {
 		this.workDir = workDir;
-		this.name = name;
+		this.filters = filters;
 	}
 	
 	public List<File> compute() {
 		List<File> results = new ArrayList<File>();
 		for(File child : workDir.listFiles()) {
-			if(child.getName().equals(name))
+			if( matches(child) ) {
 				results.add(child);
+			}
 			if(child.isDirectory()) {
-				List<File> resultsOfChild = new FindUtility(child, name).compute();
+				List<File> resultsOfChild = new FindUtility(child, filters).compute();
 				results.addAll(resultsOfChild);
 			}
 		}
 		return results;
+	}
+
+	private boolean matches(File child) {
+		for(FileFilter filter : filters) {
+			if( !filter.matches(child) )
+				return false;
+		}
+		return true;
 	}
 
 }

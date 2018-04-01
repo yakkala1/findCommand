@@ -1,39 +1,36 @@
 package commands;
 
 import java.io.File;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 public class FindCommand extends Command {
-	private static final Set<String> validArgumentNames;
-	static {
-		validArgumentNames = new HashSet<String>();
-		validArgumentNames.add("name");
-	}
-
+	private List<FileFilter> fileFilters;
+	
 	public FindCommand(File workDir, Map<String, String> args) {
 		super(workDir, args);
 	}
 
 	@Override
 	protected void processArguments() throws IllegalArgumentException {
+		fileFilters = new ArrayList<FileFilter>();
 		Iterator<Map.Entry<String,String>> iterator = args.entrySet().iterator();
 		while(iterator.hasNext()) {
-			String argumentName = iterator.next().getKey();
-			if( !validArgumentNames.contains(argumentName) ) {
-				throw new IllegalArgumentException();
-			}
+			Entry<String, String> entry = iterator.next();
+			String argumentName = entry.getKey();
+			String argumentValue = entry.getValue();
+			FileFilter filter = FileFilterFactory.createFilter(argumentName, argumentValue);
+			Logger.debug("filter : "+filter);
+			fileFilters.add(filter);
 		}
 	}
 
 	@Override
 	public String execute() {
-		String name = args.get("name");
-		List<File> matchingFiles = new FindUtility(workDir, name).compute();
-		Logger.debug(matchingFiles);
+		List<File> matchingFiles = new FindUtility(workDir, fileFilters).compute();
 		return formatResult(matchingFiles);
 	}
 
